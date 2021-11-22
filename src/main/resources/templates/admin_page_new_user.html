@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8">
+    <title>Admin page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+
+    <header class="container-fluid bg-dark">
+        <div class="row">
+            <div class="col-4 d-flex align-items-center">
+                <span class="text-white  align-items-center" th:value="${currentUser.getUsername()}"></span>
+                <span class="text-white align-items-center"> &nbsp;with role:&nbsp;</span>
+                <span class="text-white align-items-center" th:value="${currentUser.getRoles()}"></span>
+            </div>
+            <div class="col-4"></div>
+            <div class="col-4">
+                <form class="d-flex justify-content-end" method="post" action="/logout">
+                    <input class="text-muted btn btn-dark" type="submit" value="Logout">
+                </form>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2 p-0 pt-3">
+                <ul class="list-group">
+                    <a href="D:/test/htmls/templates/user_page.html" th:href="@{/user/{name}(name=${currentUser.getUsername()})}"
+                        class="list-group-item list-group-item-action">
+                        User
+                    </a>
+                    <a sec:authorize="hasRole('ADMIN')" href="D:/test/htmls/templates/admin_page.html"
+                        class="list-group-item list-group-item-action active">
+                        Admin
+                    </a>
+                </ul>
+            </div>
+
+
+            <div class="col-10">
+                <p>
+                    <h1 class="text-weght-bold">Admin panel</h1>
+                </p>
+                <!--Top panel-->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link " href="#">Admin panel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">New User</a>
+                    </li>
+                </ul>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-3  pt-3 p-0">
+                        <caption>
+                            <h4 class="text-weght-bold ">Add new user</h4>
+                        </caption>
+                            </div>
+                        <div class="col-4 p-0 pt-3">
+                            <br/>
+                            <form class="form" action="#" id="userAdd" th:object="${user}"
+                                th:action="@{/admin/updateUser/{id}(id=${user.getId()})}" th:method="PUT">
+                                <!--First Name-->
+                                <label for="user-firstName" class="d-flex justify-content-center">First
+                                    name</label>
+                                <input type="text" name="firstName" id="user-firstName"
+                                    class="form-control d-flex justify-content-center" />
+                                <!--Last Name-->
+                                <label for="user-lastName" class="d-flex justify-content-center">Last
+                                    name</label>
+                                <input type="text" name="lastName" id="user-lastName"
+                                    class="form-control d-flex justify-content-center" />
+                                <!--AGE-->
+                                <label for="user-age" class="d-flex justify-content-center">Age</label>
+                                <input type="text" name="age" id="user-age"
+                                    class="form-control d-flex justify-content-center" />
+                                <!--Email-->
+                                <label for="user-email" class="d-flex justify-content-center">Email</label>
+                                <input type="email" name="email" id="user-email"
+                                    class="form-control d-flex justify-content-center" />
+                                <!--Password-->
+                                <label for="user-password" class="d-flex justify-content-center">Password</label>
+                                <input type="password" name="password" id="user-password"
+                                    class="form-control d-flex justify-content-center" />
+                                <!--ROLES-->
+                                <label for="roles" class="d-flex justify-content-center">Roles</label>
+                                <select id="roles" class="list-group-item list-group-item-action" th:field="*{roles}"
+                                    th:multiple="${true}" size="2">
+                                    <option class="list-group-item-action" th:each="role : ${user_roles}"
+                                        th:value="${role}" th:text="${role}">Role</option>
+                                </select>
+                            </form>
+                            <br />
+                            <div class=" d-flex justify-content-center">
+                                <button type="submit" th:method="put" class="btn btn-success" form="userAdd"
+                                    id="buttonAdd">Add new user</button>
+                            </div>
+                        </div>
+                        <div class="col-5"></div>
+                        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                            crossorigin="anonymous">
+                        </script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                            crossorigin="anonymous">
+                        </script>
+                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                            crossorigin="anonymous">
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
