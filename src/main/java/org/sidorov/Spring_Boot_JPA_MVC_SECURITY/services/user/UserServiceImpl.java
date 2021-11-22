@@ -2,8 +2,8 @@ package org.sidorov.Spring_Boot_JPA_MVC_SECURITY.services.user;
 
 import org.sidorov.Spring_Boot_JPA_MVC_SECURITY.model.Role;
 import org.sidorov.Spring_Boot_JPA_MVC_SECURITY.model.User;
-import org.sidorov.Spring_Boot_JPA_MVC_SECURITY.repositories.RoleRepository;
 import org.sidorov.Spring_Boot_JPA_MVC_SECURITY.repositories.UserRepository;
+import org.sidorov.Spring_Boot_JPA_MVC_SECURITY.services.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,17 +21,15 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-    private RoleRepository roleRepository;
-    private Role ROLE_ADMIN = new Role("ROLE_ADMIN");
-    private Role ROLE_USER = new Role("ROLE_USER");
+    private RoleService roleService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           RoleRepository roleRepository) {
+                           RoleService roleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -39,8 +37,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<Role> roles = new HashSet<>();
         for (String role : user.getStringRoles()) {
-            if (role != null && role.contains("ADMIN")) roles.add(ROLE_ADMIN);
-            if (role != null && role.contains("USER")) roles.add(ROLE_USER);
+            if (role != null && role.contains("ADMIN")) roles.add(roleService.readRoleByRole("ROLE_ADMIN"));
+            if (role != null && role.contains("USER")) roles.add(roleService.readRoleByRole("ROLE_USER"));
         }
         user.setRoles(roles);
         userRepository.saveAndFlush(user);
@@ -52,11 +50,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User readUserById(long id) {
-        return userRepository.readUserById(id);
-    }
-
-    @Override
     public List<User> readAll() {
         return userRepository.findAll();
     }
@@ -65,15 +58,14 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         User oldUser = userRepository.readUserById(user.getId());
         Set<Role> roles = new HashSet<>();
-        System.out.println(user);
         if (user.getPassword() == null) {
             user.setPassword(oldUser.getPassword());
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         for (String role : user.getStringRoles()) {
-            if (role.contains("ADMIN")) roles.add(ROLE_ADMIN);
-            if (role.contains("USER")) roles.add(ROLE_USER);
+            if (role != null && role.contains("ADMIN")) roles.add(roleService.readRoleByRole("ROLE_ADMIN"));
+            if (role != null && role.contains("USER")) roles.add(roleService.readRoleByRole("ROLE_USER"));
         }
         if (roles.isEmpty()) {
             user.setRoles(oldUser.getRoles());

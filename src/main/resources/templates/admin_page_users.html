@@ -14,8 +14,8 @@
     <div class="row">
         <div class="col-4 d-flex align-items-center">
             <span class="text-white  align-items-center" th:text="${currentUser.getUsername()}"></span>
-            <span class="text-white align-items-center">&nbsp;with role:&nbsp;
-                    <span class="text-white align-items-center" th:text="${currentUser.getRolesName()}"></span></span>
+            <span class="text-white align-items-center">&nbsp;with role:&nbsp;</span>
+            <span class="text-white align-items-center" th:text="${currentUser.getRolesName()}"></span>
         </div>
         <div class="col-4"></div>
         <div class="col-4">
@@ -33,7 +33,7 @@
 
         <div class="col-2 p-0 pt-3">
             <ul class="list-group">
-                <a href="/user/{username}"
+                <a href="#"
                    th:href="@{/user/{name}(name=${currentUser.getUsername()})}"
                    class="list-group-item list-group-item-action">
                     User
@@ -48,16 +48,16 @@
 
         <div class="col-10">
             <p>
-            <h1 class="text-weght-bold">Admin panel</h1>
+            <h1 class="text-weight-bold">Admin panel</h1>
             </p>
 
             <!--Top panel-->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Admin panel</a>
+                    <a class="nav-link active" href="#" disabled="true">Admin panel</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">New User</a>
+                    <a class="nav-link" href="/admin/new_user">New User</a>
                 </li>
             </ul>
 
@@ -82,16 +82,16 @@
                 </thead>
                 <thead>
                 <tr data-th-each="some_user : ${userList}" th:id="${some_user.id}">
-                    <th scope="col" type="number" name="id" th:text="${some_user.getId()}"></th>
-                    <th scope="col" type="text" name="firstName" th:text="${some_user.getFirstName()}"/>
+                    <th class="font-weight-normal" scope="col" type="number" name="id" th:text="${some_user.getId()}"></th>
+                    <th class="font-weight-normal" scope="col" type="text" name="firstName" th:text="${some_user.getFirstName()}">
                     </th>
-                    <th scope="col" type="text" name="lastName" th:text="${some_user.getLastName()}"/>
+                    <th class="font-weight-normal" scope="col" type="text" name="lastName" th:text="${some_user.getLastName()}">
                     </th>
-                    <th scope="col" type="number" name="age" th:text="${some_user.getAge()}"/>
+                    <th class="font-weight-normal" scope="col" type="number" name="age" th:text="${some_user.getAge()}">
                     </th>
-                    <th scope="col" type="email" name="email" th:text="${some_user.getUsername()}"/>
+                    <th class="font-weight-normal" scope="col" type="email" name="email" th:text="${some_user.getUsername()}">
                     </th>
-                    <th scope="col" type="text" name="role" th:text="${some_user.getRolesName()}"/>
+                    <th class="font-weight-normal" scope="col" type="text" name="role" th:text="${some_user.getRolesName()}">
                     </th>
                     <th scope="col">
                         <button type="button" class="btn btn-info" data-list="#list-1"
@@ -106,24 +106,6 @@
                 </tr>
                 </thead>
             </table>
-
-            <!--ADD NEW USER-->
-            <!-- <div class="container" id="list-1">
-                <div class="row">
-                    <form th:object="${newUser}" th:method="POST" action="#" th:action="@{/admin/addUser}"
-                        class="d-none form">
-                        <p type="number"></p>
-                        <input type="text" name="username" id="name" />
-                        <input type="text" name="surname" id="surname" /></td>
-                        <input type="tel" name="phoneNumber" id="phoneNumber" />
-                        <input type="text" name="password" />
-                        <button type="submit" name="action" data-list="#list-1" value="addUser">Update user</button>
-                        <button type="submit" name="action" value="addAdmin">add admin</button>
-                        </td>
-                    </form>
-                </div>
-            </div> -->
-
             <!--MODAL WINDOW-->
             <div class="modal fade" id="modal" tabindex="-1">
                 <div class="modal-dialog">
@@ -166,10 +148,11 @@
                                         <!--Password-->
                                         <label for="user-password"
                                                class="d-flex justify-content-center">Password</label>
-                                        <input type="text" name="password" id="user-password" th:value="*{password}"
+                                        <input type="password" name="password" id="user-password" th:value="*{password}"
                                                class="form-control d-flex justify-content-center"/>
                                         <!--ROLES-->
                                         <label for="roles" class="d-flex justify-content-center">Roles</label>
+                                        <!--Button-->
                                         <select id="roles" class="list-group-item list-group-item-action"
                                                 th:field="*{stringRoles}"
                                                 th:multiple="${true}" size="2">
@@ -179,13 +162,16 @@
                                             </option>
                                         </select>
                                         <br/>
+                                        <!--Button close-->
                                         <button type="button" class="btn btn-secondary justify-content-end"
                                                 data-dismiss="modal">Close
                                         </button>
+                                        <!--Button Edit-->
                                         <button type="submit"
                                                 class="btn btn-primary justify-content-end" th:form="my-modal-form"
                                                 id="buttonEdit">Edit
                                         </button>
+                                        <!--Button Delete-->
                                         <button type="submit"
                                                 class="btn btn-danger justify-content-end"
                                                 th:form="form-delete"
@@ -217,37 +203,36 @@
             <script>
                 // после загрузки страницы
                 document.addEventListener('DOMContentLoaded', function () {
-                    // элемент, содержащий контент модального окна (например, имеющий id="modal")
                     const elemModal = document.querySelector('#modal');
-                    // активируем элемент в качестве модального окна с параметрами по умолчанию
                     const modal = new bootstrap.Modal(elemModal);
-                    // при клике
                     document.addEventListener('click', function (e) {
-                        // получим цель (элемент на который нажали)
                         const target = e.target;
-                        // завершим выполнение функции, если цель не имеет атрибут data-list
+
                         if (!target.dataset.list) {
                             return;
                         }
 
                         $("#buttonEdit").removeClass("d-none");
                         $("#buttonDelete").removeClass("d-none");
+
                         let buttonName = target.textContent;
                         let buttonID = target.dataset.id;
-                        console.log(buttonID);
+
                         if (buttonName.length > 30) {
                             $("#buttonEdit").addClass("d-none");
                             $("#my-modal-form").children("input").attr("disabled", true);
+                            $("#roles").attr("disabled", true);
                             $("#form-delete").attr("action","/admin/deleteUser/" + buttonID);
+                            $("#modalTitle").text("Delete user")
                         } else {
                             $("#buttonDelete").addClass("d-none");
                             $("#my-modal-form").children("input").attr("disabled", false);
                             $("#user-id").attr("disabled", true);
                             $("#my-modal-form").attr("action", "/admin/updateUser/" + buttonID);
-
+                            $("#modalTitle").text("Edit user")
                         }
 
-                        let user = $("#" + target.dataset.id).children();
+                        let user = $("#" + buttonID).children();
                         $("#user-id").val(user.get(0).textContent);
                         $("#user-firstName").val(user.get(1).textContent);
                         $("#user-lastName").val(user.get(2).textContent);

@@ -45,6 +45,7 @@ public class AdminController {
         return modelAndView;
     }
 
+    //Admin page new user
     @RequestMapping(path = "/new_user")
     public ModelAndView getAdminNewUser(ModelAndView modelAndView) {
         modelAndView.setViewName("admin_page_new_user");

@@ -40,7 +40,7 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role1 = (Role) o;
-        return id == role1.id && Objects.equals(role, role1.role);
+        return Objects.equals(role, role1.role);
     }
 
     @Override
